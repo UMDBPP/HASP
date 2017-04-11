@@ -1,0 +1,36 @@
+CC=g++
+
+CFLAGS = -I. -Wall -Wextra -O2 -std=c++11 -c
+
+#-I/usr/local/include -lraspicam -L/opt/vc/lib -lmmal -lmmal_core -lmmal_util
+
+all: camera_test read_test full_test
+
+camera_test: camera_test.o
+	$(CC) -o camera_test camera_test.o
+
+read_test: read_test.o RS232.o
+	$(CC) -o read_test read_test.o RS232.o
+
+full_test: full_test.o RS232.o
+	$(CC) -o full_test full_test.o RS232.o
+
+RS232.o: RS232.cpp
+	$(CC) $(CFLAGS) RS232.cpp -o RS232.o
+
+camera_test.o: camera_test.cpp
+	$(CC) $(CFLAGS) -I/usr/local/include -lraspicam -L/opt/vc/lib -lmmal -lmmal_core -lmmal_util camera_test.cpp -o camera_test.o
+
+read_test.o: read_test.cpp
+	$(CC) $(CFLAGS) read_test.cpp -o read_test.o
+
+full_test.o: full_test.cpp
+	$(CC) $(CFLAGS) -I/usr/local/include -lraspicam -L/opt/vc/lib -lmmal -lmmal_core -lmmal_util full_test.cpp -o full_test.o
+
+clean:
+	rm -r *.o
+
+purge: clean
+	rm -r DataPigeon
+
+.phone: clean purge
